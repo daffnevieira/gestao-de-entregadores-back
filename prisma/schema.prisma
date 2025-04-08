@@ -8,17 +8,35 @@ datasource db {
 }
 
 model Entregador {
-  id          Int           @id @default(autoincrement())
-  nome        String
-  status      String
-  localizacao Localizacao[]
+  id           Int           @id @default(autoincrement())
+  nome         String
+  status       String
+  localizacao  Localizacao[]
+  rotas        Rota[]
 }
 
 model Localizacao {
-  id           Int        @id @default(autoincrement())
-  latitude     Float
-  longitude    Float
-  timestamp    DateTime   @default(now())
-  entregador   Entregador @relation(fields: [entregadorId], references: [id])
+  id            Int        @id @default(autoincrement())
+  latitude      Float
+  longitude     Float
+  timestamp     DateTime   @default(now())
+  entregador    Entregador @relation(fields: [entregadorId], references: [id])
+  entregadorId  Int
+}
+
+model Rota {
+  id           Int         @id @default(autoincrement())
+  entregador   Entregador  @relation(fields: [entregadorId], references: [id])
   entregadorId Int
+  inicio       String
+  fim          String
+  checkpoints  Checkpoint[]
+  status       String      @default("em_andamento")
+}
+
+model Checkpoint {
+  id      Int    @id @default(autoincrement())
+  local   String
+  rota    Rota   @relation(fields: [rotaId], references: [id])
+  rotaId  Int
 }
